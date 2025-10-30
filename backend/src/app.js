@@ -22,6 +22,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+
+// API routes
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/experiences", experienceRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
+app.use("/api/v1/promo", promoRoutes);
+
 // // Production setup
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
@@ -29,12 +36,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
-
-// API routes
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/experiences", experienceRoutes);
-app.use("/api/v1/bookings", bookingRoutes);
-app.use("/api/v1/promo", promoRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))

@@ -9,26 +9,26 @@ import experienceRoutes from "./routes/experience.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import promoRoutes from "./routes/promo.routes.js";
 
-// import path from "path";
-// const __dirname = path.resolve();
+import path from "path";
+const __dirname = path.resolve();
 
 dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
 
 // // Production setup
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-//   app.get("/*splat", (req, res) => {
-//     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-//   });
-// }
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("/*splat", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
 
 // API routes
 app.use("/api/v1/users", userRoutes);

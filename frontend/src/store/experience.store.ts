@@ -12,17 +12,9 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
   fetchExperiences: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await experienceInstance.get("/");
-      const data = res.data;
-
-      // ✅ Safely handle both array and object responses
-      const experiences = Array.isArray(data)
-        ? data
-        : Array.isArray(data.experiences)
-        ? data.experiences
-        : [];
-
-      set({ experiences, loading: false });
+      const res = await experienceInstance.get<Experience[]>("/");
+      set({ experiences: res.data, loading: false });
+          console.log("✅ Experiences fetched and stored:", res.data);
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       set({

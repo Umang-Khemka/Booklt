@@ -5,7 +5,7 @@ const promoInstance: AxiosInstance = axios.create({
   baseURL:
     import.meta.env.MODE === "development"
       ? "http://localhost:5000/api/v1/promo"
-      : "/api/v1/users",
+      : "/api/v1/promo",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

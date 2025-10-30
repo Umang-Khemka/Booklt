@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useExperienceStore } from "../store/experience.store";
@@ -6,28 +5,33 @@ import ExperienceCard from "../components/ExperienceCard";
 import Navbar from "../components/Navbar";
 
 export default function ExperiencesPage() {
-  const { experiences, fetchExperiences, loading, error } =
-    useExperienceStore();
+  const store = useExperienceStore();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  // ✅ Destructure with defaults
+  const experiences = store.experiences ?? [];
+  const loading = store.loading;
+  const error = store.error;
+  const fetchExperiences = store.fetchExperiences;
+
   useEffect(() => {
     fetchExperiences();
-  }, [fetchExperiences]);
+  }, []); // ✅ Empty deps
 
   const handleViewDetails = (id: string) => {
     navigate(`/experience/${id}`);
   };
 
-  const filteredExperiences = experiences.filter(
+  // ✅ Triple safety check
+  const filteredExperiences = (Array.isArray(experiences) ? experiences : []).filter(
     (exp) =>
-      exp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      exp.location.toLowerCase().includes(searchQuery.toLowerCase())
+      exp?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      exp?.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ✅ Navbar with search handler */}
       <Navbar onSearch={(query) => setSearchQuery(query)} />
 
       <div className="py-12 px-6 bg-gray-50">

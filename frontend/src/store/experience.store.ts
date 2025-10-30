@@ -4,7 +4,7 @@ import experienceInstance from "../api/experienceInstance";
 import type { Experience, ExperienceState } from "../types/experience.ts";
 
 export const useExperienceStore = create<ExperienceState>((set) => ({
-  experiences: [],
+  experiences: [], // ✅ Always initialize as array
   selectedExperience: null,
   loading: false,
   error: null,
@@ -13,13 +13,18 @@ export const useExperienceStore = create<ExperienceState>((set) => ({
     set({ loading: true, error: null });
     try {
       const res = await experienceInstance.get<Experience[]>("/");
-      set({ experiences: res.data, loading: false });
-          console.log("✅ Experiences fetched and stored:", res.data);
+      
+      // ✅ Extra production safety
+      const experiences = Array.isArray(res.data) ? res.data : [];
+      
+      set({ experiences, loading: false });
+      console.log("✅ Experiences stored:", experiences.length);
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       set({
         error: err.response?.data?.message ?? "Failed to fetch experiences",
         loading: false,
+        experiences: [] // ✅ Reset to empty array on error
       });
     }
   },
